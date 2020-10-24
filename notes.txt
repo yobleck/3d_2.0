@@ -1,0 +1,54 @@
+3d renderer 2.0
+    2D plane object that stores 3 coordinates, vector to say which direction the plane is facing, texture info
+    use tree.py to store 2d plane objects in oct-tree
+    use player position and camera angle to get 2D planes that player might be able to see
+    use vector math to check if player can actually see object (https://www.mathsisfun.com/algebra/vectors-cross-product.html , https://www.mathsisfun.com/algebra/vectors-dot-product.html)
+        https://www.gamedev.net/tutorials/programming/math-and-physics/practical-use-of-vector-math-in-games-r2968/
+    figure out which pixels in frame buffer should actually show object (don't forget z-buffer for objects in front of others)
+    render with ncurses/qt/html canvas?
+    python/c++/js?
+    multithreaded rendering? how easy is it to integrate opencl or some other gpu thing?
+
+
+
+
+Section 2
+How to know what polygons to check if the camera can see (view culling?)
+    use camera location as the point of a rectangular pyramid
+    define the height as render distance and use camera angle to calculate the coordinates of the 4 base points
+    then get any octree/bsp-tree leaf nodes that fall within that volume
+    and compile all polygons in those nodes into a list of potentially visible objects
+    then run visibility calculations on them
+
+Section 3
+Maybe do this?
+    convert all polygons from world coordinates to coordinates relative to the camera
+    by adding camera coordinates? does camera rotation have to be accounted for?
+Projection matrix    https://matrix.reshish.com/multCalculation.php
+[1 0 0]   [x]   [x]
+[0 1 0] * [y] = [y]
+[0 0 0]   [z]   [0]
+where z is how far the object is a way from the camera
+can this resulting 2D matrix jsut be draw on screen? there would probably be prespective issues
+maybe use matrix multiplier to shrink polys that are farther away
+
+
+
+
+postmortem?
+maybe work on speed
+convert to c++
+opencl
+
+or move on to opengl
+
+
+
+Profiling
+0.1 sec on importing modules. Import only needed functions?
+render.render() is the obcious bottleneck even after multiprocessing
+
+
+cupy    https://cupy.dev/
+kernel is the operation we want to do
+inputs are matrices
